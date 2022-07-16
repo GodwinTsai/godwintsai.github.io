@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>bilibili发送弹幕 | GodwinTsai</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="前言媳妇儿玩起了bilibili直播，我就顺便研究下利用python发送弹幕，以表支持～，主要思路通过发送http请求。 发送弹幕1. 查询http请求首先登录b站，进入直播间，打开开发者工具，先在直播间发送一条弹幕。 可以看到请求的url地址，请求方式是post，以及请求的表单数据： 2. 查询自己账号cookie和user-agent信息打开开发者工具，进入个人中心&#x2F;首页： 3.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="bilibili发送弹幕">
+<meta property="og:url" content="http://godwintsai.github.io/2020/02/24/bilibili%E5%8F%91%E9%80%81%E5%BC%B9%E5%B9%95/">
+<meta property="og:site_name" content="GodwinTsai">
+<meta property="og:description" content="前言媳妇儿玩起了bilibili直播，我就顺便研究下利用python发送弹幕，以表支持～，主要思路通过发送http请求。 发送弹幕1. 查询http请求首先登录b站，进入直播间，打开开发者工具，先在直播间发送一条弹幕。 可以看到请求的url地址，请求方式是post，以及请求的表单数据： 2. 查询自己账号cookie和user-agent信息打开开发者工具，进入个人中心&#x2F;首页： 3.">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200224013846240.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2NhaTYxMjc4MQ==,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200224013940614.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2NhaTYxMjc4MQ==,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200224014122429.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2NhaTYxMjc4MQ==,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200224014214328.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2NhaTYxMjc4MQ==,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200224015047284.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2NhaTYxMjc4MQ==,size_16,color_FFFFFF,t_70">
+<meta property="article:published_time" content="2020-02-23T17:51:40.000Z">
+<meta property="article:modified_time" content="2022-07-16T11:30:57.119Z">
+<meta property="article:author" content="GodwinTsai">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/20200224013846240.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2NhaTYxMjc4MQ==,size_16,color_FFFFFF,t_70">
+  
+    <link rel="alternate" href="/atom.xml" title="GodwinTsai" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">GodwinTsai</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://godwintsai.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-bilibili发送弹幕" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/02/24/bilibili%E5%8F%91%E9%80%81%E5%BC%B9%E5%B9%95/" class="article-date">
+  <time class="dt-published" datetime="2020-02-23T17:51:40.000Z" itemprop="datePublished">2020-02-24</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Python/">Python</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      bilibili发送弹幕
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <span id="more"></span>
+
+<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>媳妇儿玩起了bilibili直播，我就顺便研究下利用python发送弹幕，以表支持～，主要思路通过发送http请求。</p>
+<h3 id="发送弹幕"><a href="#发送弹幕" class="headerlink" title="发送弹幕"></a>发送弹幕</h3><h4 id="1-查询http请求"><a href="#1-查询http请求" class="headerlink" title="1. 查询http请求"></a>1. 查询http请求</h4><p>首先登录b站，进入直播间，打开开发者工具，先在直播间发送一条弹幕。</p>
+<p>可以看到请求的url地址，请求方式是post，以及请求的表单数据：<br><img src="https://img-blog.csdnimg.cn/20200224013846240.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2NhaTYxMjc4MQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h4 id="2-查询自己账号cookie和user-agent信息"><a href="#2-查询自己账号cookie和user-agent信息" class="headerlink" title="2. 查询自己账号cookie和user-agent信息"></a>2. 查询自己账号cookie和user-agent信息</h4><p>打开开发者工具，进入个人中心&#x2F;首页：<br><img src="https://img-blog.csdnimg.cn/20200224013940614.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2NhaTYxMjc4MQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h4 id="3-代码"><a href="#3-代码" class="headerlink" title="3. 代码"></a>3. 代码</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">bullet_screen</span>():</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, room_id</span>):</span><br><span class="line">        self.room_id = room_id</span><br><span class="line">        self.send_url = <span class="string">&quot;https://api.live.bilibili.com/msg/send&quot;</span></span><br><span class="line">        self.cookie = &#123;<span class="string">&#x27;Cookie&#x27;</span> : <span class="string">&#x27;填入上图查询到的cookie&#x27;</span>&#125;</span><br><span class="line">        self.header = &#123;<span class="string">&#x27;User-Agent&#x27;</span> : <span class="string">&#x27;填入上图查询到的userAgent&#x27;</span>&#125;</span><br><span class="line"></span><br><span class="line">        self.send_data = &#123;</span><br><span class="line">            <span class="string">&#x27;color&#x27;</span>: <span class="number">16777215</span>,</span><br><span class="line">            <span class="string">&#x27;fontsize&#x27;</span>: <span class="number">25</span>,</span><br><span class="line">            <span class="string">&#x27;mode&#x27;</span>: <span class="number">1</span>,</span><br><span class="line">            <span class="string">&#x27;msg&#x27;</span>: <span class="string">&#x27;123&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;rnd&#x27;</span>: <span class="number">1582471255</span>,</span><br><span class="line">            <span class="string">&#x27;roomid&#x27;</span>: room_id,</span><br><span class="line">            <span class="string">&#x27;bubble&#x27;</span>: <span class="number">0</span>,</span><br><span class="line">            <span class="string">&#x27;csrf_token&#x27;</span>: <span class="string">&#x27;44d0e7f3eaea7ff05774822e8eaf49b2&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;csrf&#x27;</span>: <span class="string">&#x27;44d0e7f3eaea7ff05774822e8eaf49b2&#x27;</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">send</span>(<span class="params">self, msg</span>):</span><br><span class="line">        self.send_data[<span class="string">&#x27;rnd&#x27;</span>] = time.time() <span class="comment">#获得当前的时间戳</span></span><br><span class="line">        self.send_data[<span class="string">&#x27;msg&#x27;</span>] = msg</span><br><span class="line">        reponse = requests.post(self.send_url, data=self.send_data,cookies=self.cookie,headers=self.header)</span><br><span class="line">        <span class="keyword">return</span> reponse</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    bullet_screen = bullet_screen(<span class="number">21912783</span>)</span><br><span class="line">    response = bullet_screen.send(<span class="string">&#x27;棒棒哒&#x27;</span>)</span><br><span class="line">    <span class="built_in">print</span>(response)</span><br></pre></td></tr></table></figure>
+
+<h3 id="查询弹幕"><a href="#查询弹幕" class="headerlink" title="查询弹幕"></a>查询弹幕</h3><h4 id="1-查询http请求-1"><a href="#1-查询http请求-1" class="headerlink" title="1. 查询http请求"></a>1. 查询http请求</h4><p>打开开发者工具，刷新下页面，找到一个msg信息，可以得到路径和表单信息：<br><img src="https://img-blog.csdnimg.cn/20200224014122429.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2NhaTYxMjc4MQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h4 id="2-查询返回信息结构"><a href="#2-查询返回信息结构" class="headerlink" title="2. 查询返回信息结构"></a>2. 查询返回信息结构</h4><p>在Preview 标签中可以看到返回了最后10条弹幕：<br><img src="https://img-blog.csdnimg.cn/20200224014214328.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2NhaTYxMjc4MQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h4 id="3-代码-1"><a href="#3-代码-1" class="headerlink" title="3. 代码"></a>3. 代码</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">bullet_screen</span>():</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, room_id</span>):</span><br><span class="line">        self.room_id = room_id</span><br><span class="line">        self.query_url = <span class="string">&#x27;https://api.live.bilibili.com/ajax/msg&#x27;</span></span><br><span class="line">        self.cookie = &#123;<span class="string">&#x27;Cookie&#x27;</span> : <span class="string">&#x27;填入上图查询到的cookie&#x27;</span>&#125;</span><br><span class="line">        self.header = &#123;<span class="string">&#x27;User-Agent&#x27;</span> : <span class="string">&#x27;填入上图查询到的userAgent&#x27;</span>&#125;</span><br><span class="line"></span><br><span class="line">        self.query_data = &#123;</span><br><span class="line">            <span class="string">&#x27;roomid&#x27;</span>: room_id,</span><br><span class="line">            <span class="string">&#x27;csrf_token&#x27;</span>: <span class="string">&#x27;44d0e7f3eaea7ff05774822e8eaf49b2&#x27;</span>,</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">query</span>(<span class="params">self</span>):</span><br><span class="line">        response = requests.post(self.query_url, data = self.query_data)</span><br><span class="line">        rooms = response.json()[<span class="string">&#x27;data&#x27;</span>][<span class="string">&#x27;room&#x27;</span>]</span><br><span class="line">        count = <span class="built_in">len</span>(rooms)</span><br><span class="line">        <span class="keyword">if</span> count &gt; <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">return</span> rooms[count - <span class="number">1</span>][<span class="string">&#x27;text&#x27;</span>]</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    bullet_screen = bullet_screen(<span class="number">21912783</span>)</span><br><span class="line">    response = bullet_screen.query()</span><br><span class="line">    <span class="comment"># bullet_screen.send(response)</span></span><br><span class="line">    <span class="built_in">print</span>(response)</span><br></pre></td></tr></table></figure>
+
+<p>获得最近一条弹幕，这样就可以跟着发送相同弹幕了</p>
+<h3 id="自动聊天弹幕"><a href="#自动聊天弹幕" class="headerlink" title="自动聊天弹幕"></a>自动聊天弹幕</h3><p>网上有个图灵机器人，可以实现人机对话，挺有趣，利用它来发送弹幕内容。</p>
+<h4 id="1-注册"><a href="#1-注册" class="headerlink" title="1. 注册"></a>1. 注册</h4><p>首先到<a target="_blank" rel="noopener" href="http://www.tuling123.com/">图灵机器人</a>注册，创建机器人，得到一个32位的key。</p>
+<h4 id="2，http请求"><a href="#2，http请求" class="headerlink" title="2，http请求"></a>2，http请求</h4><p>请求接口为<a target="_blank" rel="noopener" href="http://openapi.tuling123.com/openapi/api/v2%EF%BC%8C%E6%96%B9%E5%BC%8F%E4%B8%BApost%EF%BC%8C%E8%AF%B7%E6%B1%82%E5%8F%82%E6%95%B0%E4%B8%BA%E5%A6%82%E4%B8%8Bjson%E6%A0%BC%E5%BC%8F%EF%BC%9A">http://openapi.tuling123.com/openapi/api/v2，方式为post，请求参数为如下json格式：</a></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;reqType&quot;</span><span class="punctuation">:</span><span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;perception&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;inputText&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;text&quot;</span><span class="punctuation">:</span> <span class="string">&quot;附近的酒店&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;inputImage&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;url&quot;</span><span class="punctuation">:</span> <span class="string">&quot;imageUrl&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;selfInfo&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;location&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">                <span class="attr">&quot;city&quot;</span><span class="punctuation">:</span> <span class="string">&quot;北京&quot;</span><span class="punctuation">,</span></span><br><span class="line">                <span class="attr">&quot;province&quot;</span><span class="punctuation">:</span> <span class="string">&quot;北京&quot;</span><span class="punctuation">,</span></span><br><span class="line">                <span class="attr">&quot;street&quot;</span><span class="punctuation">:</span> <span class="string">&quot;信息路&quot;</span></span><br><span class="line">            <span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;userInfo&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;apiKey&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;userId&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="3-返回格式"><a href="#3-返回格式" class="headerlink" title="3. 返回格式"></a>3. 返回格式</h4><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;intent&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;code&quot;</span><span class="punctuation">:</span> <span class="number">10005</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;intentName&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;actionName&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;parameters&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;nearby_place&quot;</span><span class="punctuation">:</span> <span class="string">&quot;酒店&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;results&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">        <span class="punctuation">&#123;</span></span><br><span class="line">         	<span class="attr">&quot;groupType&quot;</span><span class="punctuation">:</span> <span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;resultType&quot;</span><span class="punctuation">:</span> <span class="string">&quot;url&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;values&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">                <span class="attr">&quot;url&quot;</span><span class="punctuation">:</span> <span class="string">&quot;http://m.elong.com/hotel/0101/nlist/#indate=2016-12-10&amp;outdate=2016-12-11&amp;keywords=%E4%BF%A1%E6%81%AF%E8%B7%AF&quot;</span></span><br><span class="line">            <span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="punctuation">&#123;</span></span><br><span class="line">         	<span class="attr">&quot;groupType&quot;</span><span class="punctuation">:</span> <span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;resultType&quot;</span><span class="punctuation">:</span> <span class="string">&quot;text&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;values&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">                <span class="attr">&quot;text&quot;</span><span class="punctuation">:</span> <span class="string">&quot;亲，已帮你找到相关酒店信息&quot;</span></span><br><span class="line">            <span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="4-代码"><a href="#4-代码" class="headerlink" title="4. 代码"></a>4. 代码</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">bullet_screen</span>():</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, room_id</span>):</span><br><span class="line">        self.room_id = room_id</span><br><span class="line">        self.api_key = <span class="string">&#x27;&#x27;</span><span class="comment"># 填注册后获得的32位key</span></span><br><span class="line">        self.user_id = <span class="string">&#x27;9527&#x27;</span><span class="comment">#随便填</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">get_robot_dialogue</span>(<span class="params">self, msg</span>):</span><br><span class="line">        api_url = <span class="string">&#x27;http://openapi.tuling123.com/openapi/api/v2&#x27;</span></span><br><span class="line">        req = &#123;</span><br><span class="line">            <span class="string">&#x27;reqType&#x27;</span>: <span class="number">0</span>,</span><br><span class="line">            <span class="string">&#x27;perception&#x27;</span>: &#123;</span><br><span class="line">                <span class="string">&#x27;inputText&#x27;</span>: &#123;</span><br><span class="line">                    <span class="string">&#x27;text&#x27;</span>: msg</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;,</span><br><span class="line">            <span class="string">&#x27;userInfo&#x27;</span>: &#123;</span><br><span class="line">                <span class="string">&#x27;apiKey&#x27;</span>: self.api_key,</span><br><span class="line">                <span class="string">&#x27;userId&#x27;</span>: self.user_id</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        req = json.dumps(req).encode(<span class="string">&#x27;utf8&#x27;</span>)</span><br><span class="line">        response = requests.post(api_url, data=req, headers=&#123;<span class="string">&#x27;content-type&#x27;</span>: <span class="string">&#x27;application/json&#x27;</span>&#125;)</span><br><span class="line">        response_dic = response.json()</span><br><span class="line">        intent_code = response_dic[<span class="string">&#x27;intent&#x27;</span>][<span class="string">&#x27;code&#x27;</span>]</span><br><span class="line">        results_text = response_dic[<span class="string">&#x27;results&#x27;</span>][<span class="number">0</span>][<span class="string">&#x27;values&#x27;</span>][<span class="string">&#x27;text&#x27;</span>]</span><br><span class="line">        <span class="keyword">return</span> intent_code, results_text</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    bullet_screen = bullet_screen(<span class="number">21912783</span>)</span><br><span class="line">    code,text = bullet_screen.get_robot_dialogue(<span class="string">&#x27;主播棒棒哒&#x27;</span>)</span><br><span class="line">    <span class="built_in">print</span>(code,text)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h3><p>现在可以根据最新一条弹幕内容，发送自动对话的结果了</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    bullet_screen = bullet_screen(<span class="number">21912783</span>)</span><br><span class="line">    lastMsg = bullet_screen.query()</span><br><span class="line">    code, dialogue = bullet_screen.get_robot_dialogue(lastMsg)</span><br><span class="line">    <span class="keyword">if</span> code == <span class="number">0</span>:</span><br><span class="line">        response = bullet_screen.send(dialogue)</span><br><span class="line">    <span class="built_in">print</span>(lastMsg,dialogue)</span><br></pre></td></tr></table></figure>
+
+<p>效果如下：<br><img src="https://img-blog.csdnimg.cn/20200224015047284.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2NhaTYxMjc4MQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>图灵机器人没有验证或者购买的话，只有3次免费试用机会，笑哭</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://godwintsai.github.io/2020/02/24/bilibili%E5%8F%91%E9%80%81%E5%BC%B9%E5%B9%95/" data-id="cl5nt9715000smpuv63sz920n" data-title="bilibili发送弹幕" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/03/12/Unity%E5%8A%A8%E7%94%BB%E4%BC%98%E5%8C%96!Optimize%20Game%20Objects/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Unity动画优化:Optimize Game Objects
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/01/03/%E6%89%B9%E9%87%8F%E5%88%A0%E9%99%A4%E9%A2%84%E5%88%B6%E8%84%9A%E6%9C%AC/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">批量删除预制脚本</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C#</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Ngui/">Ngui</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/PhotoShop/">PhotoShop</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Timeline/">Timeline</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Unity/">Unity</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Unity-Optimize/">Unity Optimize</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C-%E5%90%AF%E5%8A%A8%E8%BF%9B%E7%A8%8B-C-%E8%B0%83%E7%94%A8%E5%8F%AF%E6%89%A7%E8%A1%8C%E6%96%87%E4%BB%B6/" rel="tag">C#启动进程 C#调用可执行文件</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C-%E5%A4%8D%E5%88%B6%E6%96%87%E4%BB%B6-%E5%88%A0%E9%99%A4%E5%8F%AA%E8%AF%BB%E6%96%87%E4%BB%B6%E5%BC%82%E5%B8%B8/" rel="tag">C#复制文件 删除只读文件异常</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C-%E8%B0%83%E7%94%A8SVN/" rel="tag">C#调用SVN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ETC1-Alpha/" rel="tag">ETC1 Alpha</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Timeline/" rel="tag">Timeline</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Timeline-%E5%9D%91-%E8%B5%84%E6%BA%90%E5%BC%95%E7%94%A8-%E8%B5%84%E6%BA%90%E4%BE%9D%E8%B5%96/" rel="tag">Timeline 坑 资源引用 资源依赖</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Unity/" rel="tag">Unity</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Unity%E6%B8%B2%E6%9F%93%E5%B1%82%E7%BA%A7-ngui%E6%B8%B2%E6%9F%93%E5%B1%82%E7%BA%A7/" rel="tag">Unity渲染层级 ngui渲染层级</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/photoshop-script-ps-script-actionmanager/" rel="tag">photoshop script ps script actionmanager</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/unity-coroutine-unity%E5%8D%8F%E7%A8%8B-use-coroutine-in-uni-%E7%BC%96%E8%BE%91%E5%99%A8%E4%B8%AD%E4%BD%BF%E7%94%A8%E5%8D%8F%E7%A8%8B/" rel="tag">unity coroutine unity协程 use coroutine in uni 编辑器中使用协程</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/C-%E5%90%AF%E5%8A%A8%E8%BF%9B%E7%A8%8B-C-%E8%B0%83%E7%94%A8%E5%8F%AF%E6%89%A7%E8%A1%8C%E6%96%87%E4%BB%B6/" style="font-size: 10px;">C#启动进程 C#调用可执行文件</a> <a href="/tags/C-%E5%A4%8D%E5%88%B6%E6%96%87%E4%BB%B6-%E5%88%A0%E9%99%A4%E5%8F%AA%E8%AF%BB%E6%96%87%E4%BB%B6%E5%BC%82%E5%B8%B8/" style="font-size: 10px;">C#复制文件 删除只读文件异常</a> <a href="/tags/C-%E8%B0%83%E7%94%A8SVN/" style="font-size: 10px;">C#调用SVN</a> <a href="/tags/ETC1-Alpha/" style="font-size: 10px;">ETC1 Alpha</a> <a href="/tags/Timeline/" style="font-size: 10px;">Timeline</a> <a href="/tags/Timeline-%E5%9D%91-%E8%B5%84%E6%BA%90%E5%BC%95%E7%94%A8-%E8%B5%84%E6%BA%90%E4%BE%9D%E8%B5%96/" style="font-size: 10px;">Timeline 坑 资源引用 资源依赖</a> <a href="/tags/Unity/" style="font-size: 10px;">Unity</a> <a href="/tags/Unity%E6%B8%B2%E6%9F%93%E5%B1%82%E7%BA%A7-ngui%E6%B8%B2%E6%9F%93%E5%B1%82%E7%BA%A7/" style="font-size: 10px;">Unity渲染层级 ngui渲染层级</a> <a href="/tags/photoshop-script-ps-script-actionmanager/" style="font-size: 10px;">photoshop script ps script actionmanager</a> <a href="/tags/unity-coroutine-unity%E5%8D%8F%E7%A8%8B-use-coroutine-in-uni-%E7%BC%96%E8%BE%91%E5%99%A8%E4%B8%AD%E4%BD%BF%E7%94%A8%E5%8D%8F%E7%A8%8B/" style="font-size: 10px;">unity coroutine unity协程 use coroutine in uni 编辑器中使用协程</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/07/">July 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">January 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">December 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/07/16/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/02/Skill&Buff%20Editor/">Skill&amp;Buff Editor</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/01/Unity%E4%B8%96%E7%95%8C%E5%9D%90%E6%A0%87%E5%B1%80%E9%83%A8%E5%9D%90%E6%A0%87%E8%BD%AC%E6%8D%A2/">Unity世界坐标局部坐标转换</a>
+          </li>
+        
+          <li>
+            <a href="/2020/03/12/Unity%E5%8A%A8%E7%94%BB%E4%BC%98%E5%8C%96!Optimize%20Game%20Objects/">Unity动画优化:Optimize Game Objects</a>
+          </li>
+        
+          <li>
+            <a href="/2020/02/24/bilibili%E5%8F%91%E9%80%81%E5%BC%B9%E5%B9%95/">bilibili发送弹幕</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2022 GodwinTsai<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

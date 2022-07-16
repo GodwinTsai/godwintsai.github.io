@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Unity&amp;NGUI渲染层级 | GodwinTsai</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="尊重原创，转载请在文首注明出处：http:&#x2F;&#x2F;blog.csdn.net&#x2F;cai612781&#x2F;article&#x2F;details&#x2F;78477944   项目中经常遇到层级的显示问题，来总结下。 一，Unity按优先级从高到低排列： 1，Camera.depthdepth小的先渲染。    2，Renderer.sortingLayerIDsortingLayerID为基类Renderer的属性，s">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Unity&amp;NGUI渲染层级">
+<meta property="og:url" content="http://godwintsai.github.io/2017/11/08/Unity&NGUI%E6%B8%B2%E6%9F%93%E5%B1%82%E7%BA%A7/">
+<meta property="og:site_name" content="GodwinTsai">
+<meta property="og:description" content="尊重原创，转载请在文首注明出处：http:&#x2F;&#x2F;blog.csdn.net&#x2F;cai612781&#x2F;article&#x2F;details&#x2F;78477944   项目中经常遇到层级的显示问题，来总结下。 一，Unity按优先级从高到低排列： 1，Camera.depthdepth小的先渲染。    2，Renderer.sortingLayerIDsortingLayerID为基类Renderer的属性，s">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://img-blog.csdn.net/20171108235141309?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvY2FpNjEyNzgx/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center">
+<meta property="og:image" content="https://img-blog.csdn.net/20171108235453765?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvY2FpNjEyNzgx/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center">
+<meta property="og:image" content="https://img-blog.csdn.net/20171108235556426?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvY2FpNjEyNzgx/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center">
+<meta property="og:image" content="https://img-blog.csdn.net/20171108235959691?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvY2FpNjEyNzgx/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center">
+<meta property="article:published_time" content="2017-11-08T06:00:02.000Z">
+<meta property="article:modified_time" content="2022-07-16T11:30:57.118Z">
+<meta property="article:author" content="GodwinTsai">
+<meta property="article:tag" content="Unity渲染层级 ngui渲染层级">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img-blog.csdn.net/20171108235141309?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvY2FpNjEyNzgx/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center">
+  
+    <link rel="alternate" href="/atom.xml" title="GodwinTsai" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">GodwinTsai</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://godwintsai.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-Unity&amp;NGUI渲染层级" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2017/11/08/Unity&NGUI%E6%B8%B2%E6%9F%93%E5%B1%82%E7%BA%A7/" class="article-date">
+  <time class="dt-published" datetime="2017-11-08T06:00:02.000Z" itemprop="datePublished">2017-11-08</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Unity/">Unity</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      Unity&amp;NGUI渲染层级
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <span id="more"></span>
+
+<p>尊重原创，转载请在文首注明出处：<a target="_blank" rel="noopener" href="http://blog.csdn.net/cai612781/article/details/78477944">http://blog.csdn.net/cai612781/article/details/78477944</a>  </p>
+<p>项目中经常遇到层级的显示问题，来总结下。</p>
+<h1 id="一，Unity"><a href="#一，Unity" class="headerlink" title="一，Unity"></a>一，Unity</h1><p>按优先级从高到低排列：</p>
+<h2 id="1，Camera-depth"><a href="#1，Camera-depth" class="headerlink" title="1，Camera.depth"></a>1，Camera.depth</h2><p>depth小的先渲染。</p>
+<p><img src="https://img-blog.csdn.net/20171108235141309?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvY2FpNjEyNzgx/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center">  </p>
+<h2 id="2，Renderer-sortingLayerID"><a href="#2，Renderer-sortingLayerID" class="headerlink" title="2，Renderer.sortingLayerID"></a>2，Renderer.sortingLayerID</h2><p>sortingLayerID为基类Renderer的属性，sortingLayerID小的先渲染。</p>
+<h2 id=""><a href="#" class="headerlink" title=""></a></h2><p>3，Renderer.sortingOrder</p>
+<p>sortingOrder同为基类Renderer的属性，sortingOrder小的先渲染。</p>
+<p>sortingLayerID和sortingOrder虽然是基类Renderer的属性，但只适用于Unity2d的排序，因此我们在面板中可以看到只有显示图片的SpriteRenderer和显示粒子的</p>
+<p>ParticleSystemRenderer有这两个属性。</p>
+<p><img src="https://img-blog.csdn.net/20171108235453765?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvY2FpNjEyNzgx/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center"><img src="https://img-blog.csdn.net/20171108235556426?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvY2FpNjEyNzgx/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center">  </p>
+<h2 id="4，Material-renderQueue"><a href="#4，Material-renderQueue" class="headerlink" title="4，Material.renderQueue"></a>4，Material.renderQueue</h2><p>该属性对应的是Shader的renderQueue，renderQueue的范围必须是[0,5000]，数值小的先渲染。Shader中使用SubShader的Queue标签来设定模型属于哪个渲染队列。</p>
+<p>Unity内置了几个渲染队列的枚举：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="built_in">enum</span> RenderQueue</span><br><span class="line">&#123;</span><br><span class="line">        Background = <span class="number">1000</span>,<span class="comment">//最先渲染，通常用来绘制背景</span></span><br><span class="line">        Geometry = <span class="number">2000</span>,<span class="comment">//不透明物体的渲染</span></span><br><span class="line">        AlphaTest = <span class="number">2450</span>, <span class="comment">// 需要透明度测试的物体，在不透明物体渲染后再渲染会更高效</span></span><br><span class="line">        GeometryLast = <span class="number">2500</span>, <span class="comment">// 分界线，[0,2500]为不透明物体，[2501,5000]为半透明物体</span></span><br><span class="line">        Transparent = <span class="number">3000</span>,<span class="comment">//半透明物体的渲染，任何使用了透明度混合（例如关闭了深度写入）的物体都用得用该队列</span></span><br><span class="line">        Overlay = <span class="number">4000</span>,<span class="comment">//用于叠加效果</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上述排序是在Shader关闭了深度写入（ZWrite Off）的情况下，当开启了深度写入时，物体的空间位置（transform.position.z）会影响层级，z值小的在前面。</p>
+<p>另外，Unity菜单Edit-&gt;Project Settings-&gt;Tags中的Layers,只是一个逻辑的分层，用于Camera的Culling Mask来设置相机渲染哪个Layer的物体，辅助Camera.depth来管理层级。</p>
+<h1 id="二，NGUI"><a href="#二，NGUI" class="headerlink" title="二，NGUI"></a>二，NGUI</h1><p>按优先级从高到低排列：  </p>
+<h2 id="1，UIPanel-sortingOrder"><a href="#1，UIPanel-sortingOrder" class="headerlink" title="1，UIPanel.sortingOrder"></a>1，UIPanel.sortingOrder</h2><p>通过源码可以看到UIPanel.sortingOrder更改的就是上文中Renderer.sortingOrder。</p>
+<h2 id="2，UIPanel-depth"><a href="#2，UIPanel-depth" class="headerlink" title="2，UIPanel.depth"></a>2，UIPanel.depth</h2><p>depth小的先渲染</p>
+<h2 id="3，UIWidget-depth"><a href="#3，UIWidget-depth" class="headerlink" title="3，UIWidget.depth"></a>3，UIWidget.depth</h2><p>depth小的先渲染，NGUI根据UIWidget.depth的排序合并drawcall（因此尽量将相同材质的图集在depth上排在一起可以减少UI上的drawcall）。</p>
+<p>UIPanel面板还有个Render Q属性，用来设置该面板的renderQueue的起始值，所有面板总的起始值默认为3000。该属性有三种选项，分别是</p>
+<p>Automatic，StartAt，Explicit，后两者可自定义renderQueue的起始值。</p>
+<p><img src="https://img-blog.csdn.net/20171108235959691?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvY2FpNjEyNzgx/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center">  </p>
+<p>当Render Q默认为Automatic时，根据UIPanel.depth的排序对drawcall的材质的renderqueue进行排序。</p>
+<p>当Render Q默认为StartAt或Explicit时，UIPanel.depth则不起作用，根据自定义的值对drawcall的材质的renderqueue进行排序。</p>
+<p>NGUI所用的shader都是关闭了深度写入的，因此z值不影响层级。所以NGUI本质还是通过Unity的sortingOrder和renderQueue来管理层级。</p>
+<h1 id="三，NGUI与模型或特效的夹层问题"><a href="#三，NGUI与模型或特效的夹层问题" class="headerlink" title="三，NGUI与模型或特效的夹层问题"></a>三，NGUI与模型或特效的夹层问题</h1><p>我们在处理模型或特效显示在两个UI之间的层级显示问题，有两种方式：</p>
+<p>1，利用Camera.depth属性，将界面A，模型或特效，界面B分别放在三个Layer，用三个depth递增的相机来渲染。（该方式不推荐，因为一个界面上可能会打开新的界面，以及两个界面的相对层次不是固定的，这样会导致相机不断增加，层次管理混乱）</p>
+<p>2，利用renderQueue属性，给两个UIPanel之间留下一定范围的renderQueue数值，将模型或特效的renderQueue设置在这个范围内。（推荐该方式）</p>
+<p>代码如下：</p>
+<p>第一步，新增renderQueue控制脚本：RenderQueueContro.cs</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System.Collections.Generic;</span><br><span class="line"><span class="keyword">using</span> UnityEngine;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">RenderQueueControl</span> : <span class="title">MonoBehaviour</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">private</span> UIPanel _panel;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">private</span> <span class="built_in">int</span> _rq;</span><br><span class="line">	<span class="keyword">private</span> List&lt;Material&gt; _materialList = <span class="keyword">new</span> List&lt;Material&gt;();</span><br><span class="line">	<span class="keyword">private</span> <span class="built_in">int</span> i, len;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">Start</span>()</span></span><br><span class="line">	&#123;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Init</span>()</span></span><br><span class="line">	&#123;</span><br><span class="line">		_panel = NGUITools.FindInParents&lt;UIPanel&gt;(gameObject);</span><br><span class="line">		UIPanel.AddModelRQ(<span class="keyword">this</span>);</span><br><span class="line">		InitMaterials();</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">InitMaterials</span>()</span></span><br><span class="line">	&#123;</span><br><span class="line">		_materialList.Clear();</span><br><span class="line">		Renderer[] ren = GetComponentsInChildren&lt;Renderer&gt;();</span><br><span class="line">		<span class="keyword">if</span>(ren != <span class="literal">null</span>)</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="keyword">for</span>(i = <span class="number">0</span>, len = ren.Length; i &lt; len; i++)</span><br><span class="line">			&#123;</span><br><span class="line">				_materialList.AddRange(ren[i].materials);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">UpdateRQ</span>()</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span>(_panel != <span class="literal">null</span> &amp;&amp; _panel.drawCalls.Count &gt; <span class="number">0</span>)</span><br><span class="line">		&#123;</span><br><span class="line">			_rq = _panel.drawCalls[_panel.drawCalls.Count - <span class="number">1</span>].renderQueue + <span class="number">1</span>;</span><br><span class="line">			<span class="keyword">for</span>(i = <span class="number">0</span>, len = _materialList; i &lt; len; i++)</span><br><span class="line">			&#123;</span><br><span class="line">				<span class="keyword">if</span>(_materialList[i].renderQueue != _rq)</span><br><span class="line">				&#123;</span><br><span class="line">					_materialList[i].renderQueue = _rq;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">OnDestroy</span>()</span></span><br><span class="line">	&#123;</span><br><span class="line">		_materialList.Clear();</span><br><span class="line">		UIPanel.RemoveRQ(<span class="keyword">this</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>第二步，给两个UIPanel之间留下一定范围的renderQueue数值，并在UIPanel更新时修改模型的renderQueue。我们修改UIPanel.LateUpdate（注释为修改处）。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">LateUpdate</span>()</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">if</span>(mUpdateFrame != Time.frameCount)</span><br><span class="line">	&#123;</span><br><span class="line">		mUpdateFrame = Time.frameCount;</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">for</span>(<span class="built_in">int</span> i = <span class="number">0</span>, imax = list.Count; i &lt; imax; ++i)</span><br><span class="line">		&#123;</span><br><span class="line">			list[i].UpdateSelf();</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		<span class="built_in">int</span> rq = <span class="number">3000</span>;</span><br><span class="line">		<span class="keyword">for</span>(<span class="built_in">int</span> i = <span class="number">0</span>, imax = list.Count; i &lt; imax; ++i)</span><br><span class="line">		&#123;</span><br><span class="line">			UIPanel p = list[i];</span><br><span class="line">			<span class="keyword">if</span>(p.renderQueue == RenderQueue.Automatic)</span><br><span class="line">			&#123;</span><br><span class="line">				p.startingRenderQueue = rq;</span><br><span class="line">				p.UpdateDrawCalls();</span><br><span class="line">				rq += p.drawCalls.Count * <span class="number">2</span>;<span class="comment">//加上*2</span></span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">else</span> <span class="keyword">if</span>(p.renderQueue == RenderQueue.StartAt)</span><br><span class="line">			&#123;</span><br><span class="line">				p.UpdateDrawCalls();</span><br><span class="line">				<span class="keyword">if</span>(p.drawCalls.Count != <span class="number">0</span>)</span><br><span class="line">				&#123;</span><br><span class="line">					rq = Mathf.Max(rq, p.startingRenderQueue + p.drawCalls.Count * <span class="number">2</span>);<span class="comment">//加上*2</span></span><br><span class="line"></span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">else</span></span><br><span class="line">			&#123;</span><br><span class="line">				p.UpdateDrawCalls();</span><br><span class="line">				<span class="keyword">if</span>(p.drawCalls.Count != <span class="number">0</span>)</span><br><span class="line">				&#123;</span><br><span class="line">					rq = Mathf.Max(rq, p.startingRenderQueue + <span class="number">1</span> * <span class="number">2</span>);<span class="comment">//加上*2</span></span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		UpdateModelRQ();<span class="comment">//加上刷新rq</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> List&lt;RenderQueueControl&gt; _modelRQList = <span class="keyword">new</span> List&lt;RenderQueueControl&gt;();</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">AddModelRQ</span>(<span class="params">RenderQueueControl control</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">if</span>(!_modelRQList.Contains(control))</span><br><span class="line">	&#123;</span><br><span class="line">		_modelRQList.Add(control);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">RemoveModelRQ</span>(<span class="params">RenderQueueControl control</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">	_modelRQList.Remove(control);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">UpdateModelRQ</span>()</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="built_in">int</span> i = <span class="number">0</span>, len = _modelRQList.Count; i &lt; len; i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span>(_modelRQList[i] == <span class="literal">null</span>)</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="keyword">continue</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		_modelRQList[i].UpdateRQ();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>第三步，加载模型或特效后的调用</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">AddModelParent</span>(<span class="params">GameObject modelGo, Transform parentTran</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">if</span>(modelGo == <span class="literal">null</span> || parentTran == <span class="literal">null</span> || parentTran.gameObject == <span class="literal">null</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">return</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	modelGo.transform.parent = parentTran;</span><br><span class="line">	</span><br><span class="line">	<span class="built_in">int</span> layerUi = parentTran.gameObject.layer;</span><br><span class="line">	SetLayerRecursively(parentTran.gameObject, layerUi);</span><br><span class="line">	</span><br><span class="line">	RenderQueueControl rqControl = modelGo.AddMissingComponent&lt;RenderQueueControl&gt;();</span><br><span class="line">	rqControl.Init();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">SetLayerRecursively</span>(<span class="params">GameObject parent, <span class="built_in">int</span> layer</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">if</span>(parent == <span class="literal">null</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">return</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	parent.layer = layer;</span><br><span class="line">	<span class="keyword">foreach</span>(Transform child <span class="keyword">in</span> parent.transform)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span>(child == <span class="literal">null</span>)</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="keyword">continue</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		SetLayerRecursively(child.gameObject, layer);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>效果图</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://godwintsai.github.io/2017/11/08/Unity&NGUI%E6%B8%B2%E6%9F%93%E5%B1%82%E7%BA%A7/" data-id="cl5nt9710000fmpuvdvqjhgmo" data-title="Unity&amp;NGUI渲染层级" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity%E6%B8%B2%E6%9F%93%E5%B1%82%E7%BA%A7-ngui%E6%B8%B2%E6%9F%93%E5%B1%82%E7%BA%A7/" rel="tag">Unity渲染层级 ngui渲染层级</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2017/12/13/ETC1+Alpha%E7%BA%B9%E7%90%86%E5%8E%8B%E7%BC%A9%E8%87%AA%E5%8A%A8%E5%8C%96%E8%84%9A%E6%9C%AC/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          ETC1+Alpha纹理压缩自动化脚本
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/09/23/%E8%84%9A%E6%9C%AC%E8%A7%A3%E6%9E%90photoshop%E6%96%87%E6%9C%AC%E5%B1%9E%E6%80%A7/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">脚本解析photoshop文本属性</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C#</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Ngui/">Ngui</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/PhotoShop/">PhotoShop</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Timeline/">Timeline</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Unity/">Unity</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Unity-Optimize/">Unity Optimize</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C-%E5%90%AF%E5%8A%A8%E8%BF%9B%E7%A8%8B-C-%E8%B0%83%E7%94%A8%E5%8F%AF%E6%89%A7%E8%A1%8C%E6%96%87%E4%BB%B6/" rel="tag">C#启动进程 C#调用可执行文件</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C-%E5%A4%8D%E5%88%B6%E6%96%87%E4%BB%B6-%E5%88%A0%E9%99%A4%E5%8F%AA%E8%AF%BB%E6%96%87%E4%BB%B6%E5%BC%82%E5%B8%B8/" rel="tag">C#复制文件 删除只读文件异常</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C-%E8%B0%83%E7%94%A8SVN/" rel="tag">C#调用SVN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ETC1-Alpha/" rel="tag">ETC1 Alpha</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Timeline/" rel="tag">Timeline</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Timeline-%E5%9D%91-%E8%B5%84%E6%BA%90%E5%BC%95%E7%94%A8-%E8%B5%84%E6%BA%90%E4%BE%9D%E8%B5%96/" rel="tag">Timeline 坑 资源引用 资源依赖</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Unity/" rel="tag">Unity</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Unity%E6%B8%B2%E6%9F%93%E5%B1%82%E7%BA%A7-ngui%E6%B8%B2%E6%9F%93%E5%B1%82%E7%BA%A7/" rel="tag">Unity渲染层级 ngui渲染层级</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/photoshop-script-ps-script-actionmanager/" rel="tag">photoshop script ps script actionmanager</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/unity-coroutine-unity%E5%8D%8F%E7%A8%8B-use-coroutine-in-uni-%E7%BC%96%E8%BE%91%E5%99%A8%E4%B8%AD%E4%BD%BF%E7%94%A8%E5%8D%8F%E7%A8%8B/" rel="tag">unity coroutine unity协程 use coroutine in uni 编辑器中使用协程</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/C-%E5%90%AF%E5%8A%A8%E8%BF%9B%E7%A8%8B-C-%E8%B0%83%E7%94%A8%E5%8F%AF%E6%89%A7%E8%A1%8C%E6%96%87%E4%BB%B6/" style="font-size: 10px;">C#启动进程 C#调用可执行文件</a> <a href="/tags/C-%E5%A4%8D%E5%88%B6%E6%96%87%E4%BB%B6-%E5%88%A0%E9%99%A4%E5%8F%AA%E8%AF%BB%E6%96%87%E4%BB%B6%E5%BC%82%E5%B8%B8/" style="font-size: 10px;">C#复制文件 删除只读文件异常</a> <a href="/tags/C-%E8%B0%83%E7%94%A8SVN/" style="font-size: 10px;">C#调用SVN</a> <a href="/tags/ETC1-Alpha/" style="font-size: 10px;">ETC1 Alpha</a> <a href="/tags/Timeline/" style="font-size: 10px;">Timeline</a> <a href="/tags/Timeline-%E5%9D%91-%E8%B5%84%E6%BA%90%E5%BC%95%E7%94%A8-%E8%B5%84%E6%BA%90%E4%BE%9D%E8%B5%96/" style="font-size: 10px;">Timeline 坑 资源引用 资源依赖</a> <a href="/tags/Unity/" style="font-size: 10px;">Unity</a> <a href="/tags/Unity%E6%B8%B2%E6%9F%93%E5%B1%82%E7%BA%A7-ngui%E6%B8%B2%E6%9F%93%E5%B1%82%E7%BA%A7/" style="font-size: 10px;">Unity渲染层级 ngui渲染层级</a> <a href="/tags/photoshop-script-ps-script-actionmanager/" style="font-size: 10px;">photoshop script ps script actionmanager</a> <a href="/tags/unity-coroutine-unity%E5%8D%8F%E7%A8%8B-use-coroutine-in-uni-%E7%BC%96%E8%BE%91%E5%99%A8%E4%B8%AD%E4%BD%BF%E7%94%A8%E5%8D%8F%E7%A8%8B/" style="font-size: 10px;">unity coroutine unity协程 use coroutine in uni 编辑器中使用协程</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/07/">July 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">January 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">December 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/07/16/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/02/Skill&Buff%20Editor/">Skill&amp;Buff Editor</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/01/Unity%E4%B8%96%E7%95%8C%E5%9D%90%E6%A0%87%E5%B1%80%E9%83%A8%E5%9D%90%E6%A0%87%E8%BD%AC%E6%8D%A2/">Unity世界坐标局部坐标转换</a>
+          </li>
+        
+          <li>
+            <a href="/2020/03/12/Unity%E5%8A%A8%E7%94%BB%E4%BC%98%E5%8C%96!Optimize%20Game%20Objects/">Unity动画优化:Optimize Game Objects</a>
+          </li>
+        
+          <li>
+            <a href="/2020/02/24/bilibili%E5%8F%91%E9%80%81%E5%BC%B9%E5%B9%95/">bilibili发送弹幕</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2022 GodwinTsai<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

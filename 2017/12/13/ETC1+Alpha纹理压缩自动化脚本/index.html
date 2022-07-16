@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>ETC1+Alpha纹理压缩自动化脚本 | GodwinTsai</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="尊重原创，转载请在文首注明出处：http:&#x2F;&#x2F;blog.csdn.net&#x2F;cai612781&#x2F;article&#x2F;details&#x2F;78798054   一，压缩方式 我们在Unity中对于图集和纹理，常用的压缩方案按照质量从低到高可以分为： 高压缩：Android:ETC1+Alpha, IOS:PVRTC4中压缩：RGBA16+Dithering无压缩：RGBA32   二，自动化脚本   有很">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ETC1+Alpha纹理压缩自动化脚本">
+<meta property="og:url" content="http://godwintsai.github.io/2017/12/13/ETC1+Alpha%E7%BA%B9%E7%90%86%E5%8E%8B%E7%BC%A9%E8%87%AA%E5%8A%A8%E5%8C%96%E8%84%9A%E6%9C%AC/">
+<meta property="og:site_name" content="GodwinTsai">
+<meta property="og:description" content="尊重原创，转载请在文首注明出处：http:&#x2F;&#x2F;blog.csdn.net&#x2F;cai612781&#x2F;article&#x2F;details&#x2F;78798054   一，压缩方式 我们在Unity中对于图集和纹理，常用的压缩方案按照质量从低到高可以分为： 高压缩：Android:ETC1+Alpha, IOS:PVRTC4中压缩：RGBA16+Dithering无压缩：RGBA32   二，自动化脚本   有很">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://img-blog.csdn.net/20180107013506565">
+<meta property="og:image" content="https://img-blog.csdn.net/20180107013550385">
+<meta property="article:published_time" content="2017-12-13T15:28:47.000Z">
+<meta property="article:modified_time" content="2022-07-16T11:30:57.116Z">
+<meta property="article:author" content="GodwinTsai">
+<meta property="article:tag" content="ETC1 Alpha">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img-blog.csdn.net/20180107013506565">
+  
+    <link rel="alternate" href="/atom.xml" title="GodwinTsai" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">GodwinTsai</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://godwintsai.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-ETC1+Alpha纹理压缩自动化脚本" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2017/12/13/ETC1+Alpha%E7%BA%B9%E7%90%86%E5%8E%8B%E7%BC%A9%E8%87%AA%E5%8A%A8%E5%8C%96%E8%84%9A%E6%9C%AC/" class="article-date">
+  <time class="dt-published" datetime="2017-12-13T15:28:47.000Z" itemprop="datePublished">2017-12-13</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Ngui/">Ngui</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      ETC1+Alpha纹理压缩自动化脚本
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <span id="more"></span>
+
+<p>尊重原创，转载请在文首注明出处：<a target="_blank" rel="noopener" href="http://blog.csdn.net/cai612781/article/details/78798054">http://blog.csdn.net/cai612781/article/details/78798054</a>  </p>
+<p>一，压缩方式</p>
+<p>我们在Unity中对于图集和纹理，常用的压缩方案按照质量从低到高可以分为：</p>
+<p>高压缩：Android:ETC1+Alpha, IOS:PVRTC4<br>中压缩：RGBA16+Dithering<br>无压缩：RGBA32  </p>
+<p>二，自动化脚本  </p>
+<p>有很多工具可以处理上述压缩方案，例如TexturePack。今天来总结下采用脚本自动将纹理生成ETC1+Alpha的压缩方案。</p>
+<p>采用的是Unity自带的一个压缩&#x2F;解压缩ETC格式的图像工具：etcpack.exe。在Unity 4.x中可以在Unity安装目录&#x2F;Editor&#x2F;Data&#x2F;Tools&#x2F;中找到，Unity5.x中就被移除了。<br>更多参考： <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Ericsson_Texture_Compression">https://en.wikipedia.org/wiki/Ericsson_Texture_Compression</a>  </p>
+<p>1，有了这个工具，我们并不知道怎么用。首先打开cmd，在cmd中运行这个exe。可以看到输出了使用方法和例子。<br><img src="https://img-blog.csdn.net/20180107013506565"> <img src="https://img-blog.csdn.net/20180107013550385">  </p>
+<p>2，接着我们写个bat脚本来调用这个工具，保存为etc.bat文件  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">@echo etc tool</span><br><span class="line">@echo %1</span><br><span class="line">@echo %2</span><br><span class="line">@echo %3</span><br><span class="line">@echo %4</span><br><span class="line">@echo %5</span><br><span class="line">@echo %6</span><br><span class="line">@echo %7</span><br><span class="line">@echo %8</span><br><span class="line">@set pngPath=%1</span><br><span class="line">@set outputPath=%2</span><br><span class="line">@set pkmPath=%3</span><br><span class="line">@set alphaPkmPath=%4</span><br><span class="line">@set pkmName=%5</span><br><span class="line">@set alphaPkmName=%6</span><br><span class="line">@set etcToolPath=%7</span><br><span class="line">@set speed=%8</span><br><span class="line"></span><br><span class="line">cd /d %etcToolPath%</span><br><span class="line">@echo Convert PNG to PKM without alpha channel and solo alpha PKM files</span><br><span class="line">etcpack %pngPath% %outputPath% -c etc1 -s %speed% -as -progress</span><br><span class="line">@echo Convert PKM files to PNG files</span><br><span class="line">etcpack %pkmPath% %outputPath% -ext PNG</span><br><span class="line">etcpack %alphaPkmPath% %outputPath% -ext PNG</span><br><span class="line">@echo Remove PKM files</span><br><span class="line">cd /d %outputPath%</span><br><span class="line">del %pkmName% /f</span><br><span class="line">del %alphaPkmName% /f</span><br><span class="line">@echo DONE</span><br><span class="line">#pause</span><br></pre></td></tr></table></figure>
+
+<p>3，我们在Unity中调用这个bat脚本，主要步骤有：</p>
+<p>A，C#创建cmd进程的方法</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">ExecuteProcess</span>(<span class="params"><span class="built_in">string</span> filePath, <span class="built_in">string</span> command, <span class="built_in">string</span> workPath = <span class="string">&quot;&quot;</span>, <span class="built_in">int</span> seconds = <span class="number">0</span></span>)</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="built_in">string</span>.IsNullOrEmpty(filePath))</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            Process process = <span class="keyword">new</span> Process();<span class="comment">//创建进程对象</span></span><br><span class="line">            process.StartInfo.WorkingDirectory = workPath;</span><br><span class="line">            process.StartInfo.FileName = filePath;</span><br><span class="line">            process.StartInfo.Arguments = command;</span><br><span class="line">            process.StartInfo.CreateNoWindow = <span class="literal">true</span>;</span><br><span class="line">            process.StartInfo.RedirectStandardOutput = <span class="literal">false</span>;<span class="comment">//不重定向输出</span></span><br><span class="line">            <span class="keyword">try</span></span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">if</span> (process.Start())</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="keyword">if</span> (seconds == <span class="number">0</span>)</span><br><span class="line">                    &#123;</span><br><span class="line">                        process.WaitForExit(); <span class="comment">//无限等待进程结束</span></span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="keyword">else</span></span><br><span class="line">                    &#123;</span><br><span class="line">                        process.WaitForExit(seconds); <span class="comment">//等待毫秒</span></span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">catch</span> (Exception e)</span><br><span class="line">            &#123;</span><br><span class="line">                Debug.LogError(e.Message);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">finally</span></span><br><span class="line">            &#123;</span><br><span class="line">                process.Close();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+
+<p>B，通过A中方法传入参数执行etc.bat，方法参数是图片asset</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">CompressPngToEtc</span>(<span class="params">UnityEngine.Object asset</span>)</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">string</span> pngPath = <span class="built_in">string</span>.Concat(Application.dataPath.Replace(<span class="string">&quot;/Assets&quot;</span>, <span class="string">&quot;/&quot;</span>),</span><br><span class="line">                AssetDatabase.GetAssetPath(asset));</span><br><span class="line">            <span class="built_in">string</span> etcToolPath = <span class="built_in">string</span>.Concat(Application.dataPath.Replace(<span class="string">&quot;/Assets&quot;</span>, <span class="string">&quot;&quot;</span>), <span class="string">&quot;/tools/etc_tool/&quot;</span>);</span><br><span class="line">            <span class="built_in">string</span> etcBatPath = etcToolPath + <span class="string">&quot;/etc.bat&quot;</span>;</span><br><span class="line"></span><br><span class="line">            <span class="built_in">string</span> pngName = asset.name + <span class="string">&quot;png&quot;</span>;</span><br><span class="line">            <span class="built_in">string</span> pngFolderPath = Path.GetDirectoryName(pngPath);</span><br><span class="line"></span><br><span class="line">            <span class="built_in">string</span> outputPath = pngFolderPath + <span class="string">&quot;/etc&quot;</span>;</span><br><span class="line"></span><br><span class="line">            <span class="built_in">string</span> pkmName = pngName.Replace(<span class="string">&quot;.png&quot;</span>, <span class="string">&quot;.pkm&quot;</span>);</span><br><span class="line">            <span class="built_in">string</span> pkmPath = outputPath + <span class="string">&quot;/&quot;</span> + pkmName;</span><br><span class="line"></span><br><span class="line">            <span class="built_in">string</span> alphaPkmName = pngName.Replace(<span class="string">&quot;.png&quot;</span>, <span class="string">&quot;_alpha.pkm&quot;</span>);</span><br><span class="line">            <span class="built_in">string</span> alphaPkmPath = outputPath + <span class="string">&quot;/&quot;</span> + alphaPkmName;</span><br><span class="line"></span><br><span class="line">            <span class="built_in">string</span> speed = <span class="string">&quot;fast&quot;</span>;</span><br><span class="line"></span><br><span class="line">            <span class="built_in">string</span> args = <span class="built_in">string</span>.Format(<span class="string">&quot;\&quot;&#123;0&#125;\&quot; \&quot;&#123;1&#125;\&quot; \&quot;&#123;2&#125;\&quot; \&quot;&#123;3&#125;\&quot; &#123;4&#125; &#123;5&#125; \&quot;&#123;6&#125;\&quot; &#123;7&#125;&quot;</span>, pngPath, outputPath,</span><br><span class="line">                pkmPath, alphaPkmPath, pkmName, alphaPkmName, etcToolPath, speed);</span><br><span class="line">            ExecuteProcess(etcBatPath, args);</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+
+<p>C，增加编辑器菜单选择要处理的图片</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">MenuItem(<span class="string">&quot;Assets/Compress png 2 etc&quot;</span>, false, 10001)</span>]</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">CreateEtc</span>()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">string</span> path;</span><br><span class="line">    UnityEngine.Object matAsset;</span><br><span class="line">    UnityEngine.Object[] selectedAssets = Selection.GetFiltered(<span class="keyword">typeof</span>(Texture2D), SelectionMode.DeepAssets);</span><br><span class="line">    <span class="keyword">foreach</span> (Object asset <span class="keyword">in</span> selectedAssets)</span><br><span class="line">    &#123;</span><br><span class="line">        path = AssetDatabase.GetAssetPath(asset);</span><br><span class="line">        matAsset = AssetDatabase.LoadAssetAtPath(path.Replace(<span class="string">&quot;.png&quot;</span>, <span class="string">&quot;.mat&quot;</span>), <span class="keyword">typeof</span> (Material)) <span class="keyword">as</span> Material;</span><br><span class="line">        <span class="keyword">if</span> (matAsset != <span class="literal">null</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            CompressPngToEtc(asset);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[<span class="meta">MenuItem(<span class="string">&quot;Assets/Compress png 2 etc&quot;</span>, true, 10001)</span>]</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="built_in">bool</span> <span class="title">CreateEtcEnabled</span>()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="built_in">int</span> i = <span class="number">0</span>; i &lt; Selection.objects.Length; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">var</span> obj = Selection.objects[i];</span><br><span class="line">        <span class="keyword">var</span> filePath = AssetDatabase.GetAssetPath(obj);</span><br><span class="line">        <span class="keyword">if</span> (filePath.EndsWith(<span class="string">&quot;.png&quot;</span>, System.StringComparison.CurrentCultureIgnoreCase) ||</span><br><span class="line">            filePath.EndsWith(<span class="string">&quot;.jpg&quot;</span>, System.StringComparison.CurrentCultureIgnoreCase))</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>D，生成rgb图片以及alpha图片后设置图片格式  </p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">SetTextureType</span>(<span class="params"><span class="built_in">string</span> path, TextureImporterFormat format, FilterMode mode = FilterMode.Bilinear</span>)</span></span><br><span class="line">        &#123;</span><br><span class="line">            TextureImporter importer = AssetImporter.GetAtPath(path) <span class="keyword">as</span> TextureImporter;</span><br><span class="line">            <span class="keyword">if</span> (importer != <span class="literal">null</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                importer.textureType = TextureImporterType.Sprite;</span><br><span class="line">                importer.textureFormat = format;</span><br><span class="line">                importer.filterMode = mode;</span><br><span class="line">                importer.mipmapEnabled = <span class="literal">false</span>;</span><br><span class="line">                </span><br><span class="line">                TextureImporterSettings tis = <span class="keyword">new</span> TextureImporterSettings();</span><br><span class="line">                importer.ReadTextureSettings(tis);</span><br><span class="line">                importer.SetTextureSettings(tis);</span><br><span class="line">                AssetDatabase.ImportAsset(path);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">SetTextureTypeCompressed</span>(<span class="params"><span class="built_in">object</span> pngAsset</span>)</span></span><br><span class="line">        &#123;</span><br><span class="line">	    Texture2D mainTexture = AssetDatabase.LoadAssetAtPath(pngPath.Replace(pngAsset.name, <span class="string">&quot;etc/&quot;</span> + pngAsset.name), <span class="keyword">typeof</span> (Texture2D)) <span class="keyword">as</span> Texture2D;</span><br><span class="line">            Texture2D alphaTexture = AssetDatabase.LoadAssetAtPath(pngPath.Replace(pngAsset.name, <span class="string">&quot;etc/&quot;</span> + pngAsset.name + <span class="string">&quot;_alpha&quot;</span>), <span class="keyword">typeof</span> (Texture2D)) <span class="keyword">as</span> Texture2D;</span><br><span class="line">            <span class="built_in">string</span> mainPath = AssetDatabase.GetAssetPath(mainTexture);</span><br><span class="line">            <span class="built_in">string</span> alphaPath = AssetDatabase.GetAssetPath(alphaTexture);</span><br><span class="line">            SetTextureType(mainPath, TextureImporterFormat.AutomaticCompressed);</span><br><span class="line">            SetTextureType(alphaPath, TextureImporterFormat.AutomaticCompressed);</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+
+<p>E，设置材质球Shader为UIETC，并引用两张生成的图片</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">SetMaterialEtcShader</span>(<span class="params">UnityEngine.Object asset</span>)</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">string</span> path;</span><br><span class="line">            Material mat;</span><br><span class="line">            Texture2D mainTexture;</span><br><span class="line">            Texture2D alphaTexture;</span><br><span class="line"></span><br><span class="line">            path = AssetDatabase.GetAssetPath(asset);</span><br><span class="line">            mat = asset <span class="keyword">as</span> Material;</span><br><span class="line">            <span class="keyword">if</span> (mat == <span class="literal">null</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            mat.shader = Shader.Find(<span class="string">&quot;Mogo/UIETC&quot;</span>);</span><br><span class="line">            mainTexture = AssetDatabase.LoadAssetAtPath(path.Replace(asset.name + <span class="string">&quot;.mat&quot;</span>, <span class="string">&quot;etc/&quot;</span> + asset.name + <span class="string">&quot;.png&quot;</span>), <span class="keyword">typeof</span>(Texture2D)) <span class="keyword">as</span> Texture2D;</span><br><span class="line">            mat.mainTexture = mainTexture;</span><br><span class="line">            alphaTexture = AssetDatabase.LoadAssetAtPath(path.Replace(asset.name + <span class="string">&quot;.mat&quot;</span>, <span class="string">&quot;etc/&quot;</span> + asset.name + <span class="string">&quot;_alpha.png&quot;</span>), <span class="keyword">typeof</span>(Texture2D)) <span class="keyword">as</span> Texture2D;</span><br><span class="line">            mat.SetTexture(<span class="string">&quot;_AlphaTex&quot;</span>, alphaTexture);</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+
+<p>4,运行效果</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://godwintsai.github.io/2017/12/13/ETC1+Alpha%E7%BA%B9%E7%90%86%E5%8E%8B%E7%BC%A9%E8%87%AA%E5%8A%A8%E5%8C%96%E8%84%9A%E6%9C%AC/" data-id="cl5nt970v0005mpuv3unhfuht" data-title="ETC1+Alpha纹理压缩自动化脚本" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ETC1-Alpha/" rel="tag">ETC1 Alpha</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/01/07/Unity%E5%8D%8F%E7%A8%8B&%E5%9C%A8%E7%BC%96%E8%BE%91%E5%99%A8%E4%B8%AD%E4%BD%BF%E7%94%A8%E5%8D%8F%E7%A8%8B/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Unity协程&amp;在编辑器中使用协程
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/11/08/Unity&NGUI%E6%B8%B2%E6%9F%93%E5%B1%82%E7%BA%A7/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Unity&amp;NGUI渲染层级</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C#</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Ngui/">Ngui</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/PhotoShop/">PhotoShop</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Timeline/">Timeline</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Unity/">Unity</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Unity-Optimize/">Unity Optimize</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C-%E5%90%AF%E5%8A%A8%E8%BF%9B%E7%A8%8B-C-%E8%B0%83%E7%94%A8%E5%8F%AF%E6%89%A7%E8%A1%8C%E6%96%87%E4%BB%B6/" rel="tag">C#启动进程 C#调用可执行文件</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C-%E5%A4%8D%E5%88%B6%E6%96%87%E4%BB%B6-%E5%88%A0%E9%99%A4%E5%8F%AA%E8%AF%BB%E6%96%87%E4%BB%B6%E5%BC%82%E5%B8%B8/" rel="tag">C#复制文件 删除只读文件异常</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C-%E8%B0%83%E7%94%A8SVN/" rel="tag">C#调用SVN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ETC1-Alpha/" rel="tag">ETC1 Alpha</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Timeline/" rel="tag">Timeline</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Timeline-%E5%9D%91-%E8%B5%84%E6%BA%90%E5%BC%95%E7%94%A8-%E8%B5%84%E6%BA%90%E4%BE%9D%E8%B5%96/" rel="tag">Timeline 坑 资源引用 资源依赖</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Unity/" rel="tag">Unity</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Unity%E6%B8%B2%E6%9F%93%E5%B1%82%E7%BA%A7-ngui%E6%B8%B2%E6%9F%93%E5%B1%82%E7%BA%A7/" rel="tag">Unity渲染层级 ngui渲染层级</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/photoshop-script-ps-script-actionmanager/" rel="tag">photoshop script ps script actionmanager</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/unity-coroutine-unity%E5%8D%8F%E7%A8%8B-use-coroutine-in-uni-%E7%BC%96%E8%BE%91%E5%99%A8%E4%B8%AD%E4%BD%BF%E7%94%A8%E5%8D%8F%E7%A8%8B/" rel="tag">unity coroutine unity协程 use coroutine in uni 编辑器中使用协程</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/C-%E5%90%AF%E5%8A%A8%E8%BF%9B%E7%A8%8B-C-%E8%B0%83%E7%94%A8%E5%8F%AF%E6%89%A7%E8%A1%8C%E6%96%87%E4%BB%B6/" style="font-size: 10px;">C#启动进程 C#调用可执行文件</a> <a href="/tags/C-%E5%A4%8D%E5%88%B6%E6%96%87%E4%BB%B6-%E5%88%A0%E9%99%A4%E5%8F%AA%E8%AF%BB%E6%96%87%E4%BB%B6%E5%BC%82%E5%B8%B8/" style="font-size: 10px;">C#复制文件 删除只读文件异常</a> <a href="/tags/C-%E8%B0%83%E7%94%A8SVN/" style="font-size: 10px;">C#调用SVN</a> <a href="/tags/ETC1-Alpha/" style="font-size: 10px;">ETC1 Alpha</a> <a href="/tags/Timeline/" style="font-size: 10px;">Timeline</a> <a href="/tags/Timeline-%E5%9D%91-%E8%B5%84%E6%BA%90%E5%BC%95%E7%94%A8-%E8%B5%84%E6%BA%90%E4%BE%9D%E8%B5%96/" style="font-size: 10px;">Timeline 坑 资源引用 资源依赖</a> <a href="/tags/Unity/" style="font-size: 10px;">Unity</a> <a href="/tags/Unity%E6%B8%B2%E6%9F%93%E5%B1%82%E7%BA%A7-ngui%E6%B8%B2%E6%9F%93%E5%B1%82%E7%BA%A7/" style="font-size: 10px;">Unity渲染层级 ngui渲染层级</a> <a href="/tags/photoshop-script-ps-script-actionmanager/" style="font-size: 10px;">photoshop script ps script actionmanager</a> <a href="/tags/unity-coroutine-unity%E5%8D%8F%E7%A8%8B-use-coroutine-in-uni-%E7%BC%96%E8%BE%91%E5%99%A8%E4%B8%AD%E4%BD%BF%E7%94%A8%E5%8D%8F%E7%A8%8B/" style="font-size: 10px;">unity coroutine unity协程 use coroutine in uni 编辑器中使用协程</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/07/">July 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">January 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">December 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/07/16/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/02/Skill&Buff%20Editor/">Skill&amp;Buff Editor</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/01/Unity%E4%B8%96%E7%95%8C%E5%9D%90%E6%A0%87%E5%B1%80%E9%83%A8%E5%9D%90%E6%A0%87%E8%BD%AC%E6%8D%A2/">Unity世界坐标局部坐标转换</a>
+          </li>
+        
+          <li>
+            <a href="/2020/03/12/Unity%E5%8A%A8%E7%94%BB%E4%BC%98%E5%8C%96!Optimize%20Game%20Objects/">Unity动画优化:Optimize Game Objects</a>
+          </li>
+        
+          <li>
+            <a href="/2020/02/24/bilibili%E5%8F%91%E9%80%81%E5%BC%B9%E5%B9%95/">bilibili发送弹幕</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2022 GodwinTsai<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

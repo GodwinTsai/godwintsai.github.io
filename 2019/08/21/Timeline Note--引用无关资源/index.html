@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Timeline Note--引用无关资源 | GodwinTsai</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="一，环境：Unity 2018.4.2 二，结构一个Prefab一段Timeline演出，Prefab上会挂PlayableDirector组件，并绑定Timeline Asset。Timeline Asset的编辑内容 三，现象对预制执行Select Dependencies发现：该预制额外地引用了一些无关的资源，例如两个FBX资源，动作（skill2_x），甚至还引用了其它的Timelin">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Timeline Note--引用无关资源">
+<meta property="og:url" content="http://godwintsai.github.io/2019/08/21/Timeline%20Note--%E5%BC%95%E7%94%A8%E6%97%A0%E5%85%B3%E8%B5%84%E6%BA%90/">
+<meta property="og:site_name" content="GodwinTsai">
+<meta property="og:description" content="一，环境：Unity 2018.4.2 二，结构一个Prefab一段Timeline演出，Prefab上会挂PlayableDirector组件，并绑定Timeline Asset。Timeline Asset的编辑内容 三，现象对预制执行Select Dependencies发现：该预制额外地引用了一些无关的资源，例如两个FBX资源，动作（skill2_x），甚至还引用了其它的Timelin">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190821091449385.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2NhaTYxMjc4MQ==,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190821092510174.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2NhaTYxMjc4MQ==,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190821091730566.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190821091804823.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2NhaTYxMjc4MQ==,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190821094322208.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2NhaTYxMjc4MQ==,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190821095033461.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2NhaTYxMjc4MQ==,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190821095044203.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2NhaTYxMjc4MQ==,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190821112430959.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190821112444534.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2NhaTYxMjc4MQ==,size_16,color_FFFFFF,t_70">
+<meta property="article:published_time" content="2019-08-21T04:09:46.000Z">
+<meta property="article:modified_time" content="2022-07-16T11:30:57.117Z">
+<meta property="article:author" content="GodwinTsai">
+<meta property="article:tag" content="Timeline 坑 资源引用 资源依赖">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/20190821091449385.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2NhaTYxMjc4MQ==,size_16,color_FFFFFF,t_70">
+  
+    <link rel="alternate" href="/atom.xml" title="GodwinTsai" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">GodwinTsai</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://godwintsai.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-Timeline Note--引用无关资源" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2019/08/21/Timeline%20Note--%E5%BC%95%E7%94%A8%E6%97%A0%E5%85%B3%E8%B5%84%E6%BA%90/" class="article-date">
+  <time class="dt-published" datetime="2019-08-21T04:09:46.000Z" itemprop="datePublished">2019-08-21</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Timeline/">Timeline</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      Timeline Note--引用无关资源
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <span id="more"></span>
+
+<h2 id="一，环境："><a href="#一，环境：" class="headerlink" title="一，环境："></a>一，环境：</h2><p>Unity 2018.4.2</p>
+<h2 id="二，结构"><a href="#二，结构" class="headerlink" title="二，结构"></a>二，结构</h2><p><img src="https://img-blog.csdnimg.cn/20190821091449385.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2NhaTYxMjc4MQ==,size_16,color_FFFFFF,t_70" alt="图1"><br>一个Prefab一段Timeline演出，Prefab上会挂PlayableDirector组件，并绑定Timeline Asset。<br><img src="https://img-blog.csdnimg.cn/20190821092510174.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2NhaTYxMjc4MQ==,size_16,color_FFFFFF,t_70" alt="图2"><br>Timeline Asset的编辑内容</p>
+<h2 id="三，现象"><a href="#三，现象" class="headerlink" title="三，现象"></a>三，现象</h2><p><img src="https://img-blog.csdnimg.cn/20190821091730566.png" alt="图3"><br>对预制执行Select Dependencies发现：<br><img src="https://img-blog.csdnimg.cn/20190821091804823.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2NhaTYxMjc4MQ==,size_16,color_FFFFFF,t_70" alt="图4"><br>该预制额外地引用了一些无关的资源，例如两个FBX资源，动作（skill2_x），甚至还引用了其它的Timeline Asset（4110092，BossShow）。</p>
+<h2 id="四，分析"><a href="#四，分析" class="headerlink" title="四，分析"></a>四，分析</h2><p>1，通过查看prefab和meta文件：<br><img src="https://img-blog.csdnimg.cn/20190821094322208.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2NhaTYxMjc4MQ==,size_16,color_FFFFFF,t_70" alt="图5"><br>发现PlayableDirector的m_SceneBindings有很多guid的引用。但由图1、图2可见Timeline Asset中其实只有8个绑定。<br>2，选择Inspector的Debug模式<img src="https://img-blog.csdnimg.cn/20190821095033461.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2NhaTYxMjc4MQ==,size_16,color_FFFFFF,t_70" alt="图6"><br><img src="https://img-blog.csdnimg.cn/20190821095044203.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2NhaTYxMjc4MQ==,size_16,color_FFFFFF,t_70" alt="图7"><br>发现竟然有28个绑定。<br>3，经测试发现，复制Prefab时，PlayableDirector组件的Binding也会跟着复制，即使关联新的TimelineAsset，也不会清空重新赋值，估计Unity后面版本会修复。</p>
+<h2 id="五，解决"><a href="#五，解决" class="headerlink" title="五，解决"></a>五，解决</h2><p>PlayableDirector组件的Binding字段是写在c++，也没有提供访问或清空的接口。因此采用重挂组件再赋值的办法。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">public static void OptimizeBinding(GameObject go)</span><br><span class="line">&#123;</span><br><span class="line">    var prefab = GameObject.Instantiate(go);</span><br><span class="line">    var director = prefab.GetComponent&lt;PlayableDirector&gt;();</span><br><span class="line">    if (director == null)</span><br><span class="line">    &#123;</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    var timelineAsset = director.playableAsset as TimelineAsset;</span><br><span class="line">    if (timelineAsset == null)</span><br><span class="line">    &#123;</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    Dictionary&lt;UnityEngine.Object, UnityEngine.Object&gt; bindings = new Dictionary&lt;UnityEngine.Object, UnityEngine.Object&gt;();</span><br><span class="line">    foreach (var pb in director.playableAsset.outputs)</span><br><span class="line">    &#123;</span><br><span class="line">        var key = pb.sourceObject;</span><br><span class="line">        var value = director.GetGenericBinding(key);</span><br><span class="line">        if (!bindings.ContainsKey(key))</span><br><span class="line">        &#123;</span><br><span class="line">            bindings.Add(key, value);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    GameObject.DestroyImmediate(director);</span><br><span class="line">    director = prefab.AddComponent&lt;PlayableDirector&gt;();</span><br><span class="line">    director.playableAsset = timelineAsset;</span><br><span class="line">    director.playOnAwake = false;</span><br><span class="line">    foreach (var pair in bindings)</span><br><span class="line">    &#123;</span><br><span class="line">        director.SetGenericBinding(pair.Key, pair.Value);</span><br><span class="line">    &#125;</span><br><span class="line">    var path = AssetDatabase.GetAssetPath(go);</span><br><span class="line">    PrefabUtility.SaveAsPrefabAsset(prefab, path, out var success);</span><br><span class="line">    GameObject.DestroyImmediate(prefab);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="六，结果"><a href="#六，结果" class="headerlink" title="六，结果"></a>六，结果</h2><p><img src="https://img-blog.csdnimg.cn/20190821112430959.png" alt="图8"><br><img src="https://img-blog.csdnimg.cn/20190821112444534.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2NhaTYxMjc4MQ==,size_16,color_FFFFFF,t_70" alt="图9"><br>运行脚本后，Prefab不再引用不相关的资源，PlayableDirector的Binding数量也跟TimelineAsset的Track数量一致。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://godwintsai.github.io/2019/08/21/Timeline%20Note--%E5%BC%95%E7%94%A8%E6%97%A0%E5%85%B3%E8%B5%84%E6%BA%90/" data-id="cl5nt970y000ampuv76zd1yp5" data-title="Timeline Note--引用无关资源" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Timeline-%E5%9D%91-%E8%B5%84%E6%BA%90%E5%BC%95%E7%94%A8-%E8%B5%84%E6%BA%90%E4%BE%9D%E8%B5%96/" rel="tag">Timeline 坑 资源引用 资源依赖</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/01/03/%E6%89%B9%E9%87%8F%E5%88%A0%E9%99%A4%E9%A2%84%E5%88%B6%E8%84%9A%E6%9C%AC/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          批量删除预制脚本
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/08/12/Timeline%20%E4%B8%80%EF%BC%8C%E7%AE%80%E4%BB%8B/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Timeline 一，简介</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C#</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Ngui/">Ngui</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/PhotoShop/">PhotoShop</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Timeline/">Timeline</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Unity/">Unity</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Unity-Optimize/">Unity Optimize</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C-%E5%90%AF%E5%8A%A8%E8%BF%9B%E7%A8%8B-C-%E8%B0%83%E7%94%A8%E5%8F%AF%E6%89%A7%E8%A1%8C%E6%96%87%E4%BB%B6/" rel="tag">C#启动进程 C#调用可执行文件</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C-%E5%A4%8D%E5%88%B6%E6%96%87%E4%BB%B6-%E5%88%A0%E9%99%A4%E5%8F%AA%E8%AF%BB%E6%96%87%E4%BB%B6%E5%BC%82%E5%B8%B8/" rel="tag">C#复制文件 删除只读文件异常</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C-%E8%B0%83%E7%94%A8SVN/" rel="tag">C#调用SVN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ETC1-Alpha/" rel="tag">ETC1 Alpha</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Timeline/" rel="tag">Timeline</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Timeline-%E5%9D%91-%E8%B5%84%E6%BA%90%E5%BC%95%E7%94%A8-%E8%B5%84%E6%BA%90%E4%BE%9D%E8%B5%96/" rel="tag">Timeline 坑 资源引用 资源依赖</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Unity/" rel="tag">Unity</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Unity%E6%B8%B2%E6%9F%93%E5%B1%82%E7%BA%A7-ngui%E6%B8%B2%E6%9F%93%E5%B1%82%E7%BA%A7/" rel="tag">Unity渲染层级 ngui渲染层级</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/photoshop-script-ps-script-actionmanager/" rel="tag">photoshop script ps script actionmanager</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/unity-coroutine-unity%E5%8D%8F%E7%A8%8B-use-coroutine-in-uni-%E7%BC%96%E8%BE%91%E5%99%A8%E4%B8%AD%E4%BD%BF%E7%94%A8%E5%8D%8F%E7%A8%8B/" rel="tag">unity coroutine unity协程 use coroutine in uni 编辑器中使用协程</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/C-%E5%90%AF%E5%8A%A8%E8%BF%9B%E7%A8%8B-C-%E8%B0%83%E7%94%A8%E5%8F%AF%E6%89%A7%E8%A1%8C%E6%96%87%E4%BB%B6/" style="font-size: 10px;">C#启动进程 C#调用可执行文件</a> <a href="/tags/C-%E5%A4%8D%E5%88%B6%E6%96%87%E4%BB%B6-%E5%88%A0%E9%99%A4%E5%8F%AA%E8%AF%BB%E6%96%87%E4%BB%B6%E5%BC%82%E5%B8%B8/" style="font-size: 10px;">C#复制文件 删除只读文件异常</a> <a href="/tags/C-%E8%B0%83%E7%94%A8SVN/" style="font-size: 10px;">C#调用SVN</a> <a href="/tags/ETC1-Alpha/" style="font-size: 10px;">ETC1 Alpha</a> <a href="/tags/Timeline/" style="font-size: 10px;">Timeline</a> <a href="/tags/Timeline-%E5%9D%91-%E8%B5%84%E6%BA%90%E5%BC%95%E7%94%A8-%E8%B5%84%E6%BA%90%E4%BE%9D%E8%B5%96/" style="font-size: 10px;">Timeline 坑 资源引用 资源依赖</a> <a href="/tags/Unity/" style="font-size: 10px;">Unity</a> <a href="/tags/Unity%E6%B8%B2%E6%9F%93%E5%B1%82%E7%BA%A7-ngui%E6%B8%B2%E6%9F%93%E5%B1%82%E7%BA%A7/" style="font-size: 10px;">Unity渲染层级 ngui渲染层级</a> <a href="/tags/photoshop-script-ps-script-actionmanager/" style="font-size: 10px;">photoshop script ps script actionmanager</a> <a href="/tags/unity-coroutine-unity%E5%8D%8F%E7%A8%8B-use-coroutine-in-uni-%E7%BC%96%E8%BE%91%E5%99%A8%E4%B8%AD%E4%BD%BF%E7%94%A8%E5%8D%8F%E7%A8%8B/" style="font-size: 10px;">unity coroutine unity协程 use coroutine in uni 编辑器中使用协程</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/07/">July 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">January 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">December 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/07/16/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/02/Skill&Buff%20Editor/">Skill&amp;Buff Editor</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/01/Unity%E4%B8%96%E7%95%8C%E5%9D%90%E6%A0%87%E5%B1%80%E9%83%A8%E5%9D%90%E6%A0%87%E8%BD%AC%E6%8D%A2/">Unity世界坐标局部坐标转换</a>
+          </li>
+        
+          <li>
+            <a href="/2020/03/12/Unity%E5%8A%A8%E7%94%BB%E4%BC%98%E5%8C%96!Optimize%20Game%20Objects/">Unity动画优化:Optimize Game Objects</a>
+          </li>
+        
+          <li>
+            <a href="/2020/02/24/bilibili%E5%8F%91%E9%80%81%E5%BC%B9%E5%B9%95/">bilibili发送弹幕</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2022 GodwinTsai<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
